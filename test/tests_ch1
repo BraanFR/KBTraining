@@ -1,0 +1,19 @@
+{:ok, sup} = ServSupervisor.start_link([])
+children = Supervisor.which_children(sup)
+database = elem(List.first(children), 1)
+Server.JsonLoader.load_to_database(database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
+Server.Database.read(database, "nat_order000147815")
+
+
+children = Supervisor.which_children(ServSupervisor)
+database = elem(List.first(children), 1)
+Server.JsonLoader.load_to_database(database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
+Server.Database.read(database, "nat_order000147815")
+Server.Database.search(database, [])
+Server.Database.search(database, [{"id", "nat_order000147815"}])
+Server.Database.search(database, [{"id", "nat_order000147815"}, {"id", "nat_order000147798"}])
+Server.Database.search(database, [{"id", "nat_order000147815"}, {"remoteid", "000147815"}])
+Server.Database.search(database, [{"id", "nat_order000147815"}, {"remoteid", "000147798"}])
+
+
+Server.JsonLoader.load_to_database(Server.Database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
