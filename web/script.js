@@ -3,7 +3,7 @@ export const displayAlert = () => {
     
     ReactDOM.render(
         element,
-        document.getElementById('root')
+        document.getElementById('display')
     );
 }
 

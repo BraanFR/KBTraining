@@ -10,7 +10,10 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ["@babel/preset-env", { "targets": "defaults" }], "@babel/preset-react"]
+              ["@babel/preset-env", { "targets": "defaults" }],
+              "@babel/preset-react",
+              ["@kbrw/babel-preset-jsxz", { dir: 'webflow' }] 
+            ]
           }
         },
         exclude: /node_modules/
