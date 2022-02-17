@@ -1,6 +1,7 @@
 defmodule Server.RouterBis do
   use Plug.Router
 
+  plug Plug.Static, from: "priv/static", at: "/static"
   plug(:match)
   plug Plug.Parsers, parsers: [:urlencoded, {:json, json_decoder: Poison}]
   plug(:dispatch)
@@ -64,8 +65,10 @@ defmodule Server.RouterBis do
 
   end
 
-  get "/", do: send_resp(conn, 200, "Welcome")
+  # get "/", do: send_resp(conn, 200, "Welcome")
 
-  match _, do: send_resp(conn, 404, "Page Not Found")
+  get _, do: send_file(conn, 200, "priv/static/index.html")
+
+  # match _, do: send_resp(conn, 404, "Page Not Found")
 
 end

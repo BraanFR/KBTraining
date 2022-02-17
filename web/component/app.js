@@ -37,7 +37,7 @@ var React = require("react")
 var createReactClass = require('create-react-class')
 
 /* required css for our application */
-// require('../css/tuto.webflow.css');
+require('../css/tuto.webflow.css');
 
 var Page = createReactClass({
   render(){
@@ -69,4 +69,4 @@ var Table = createReactClass({
   }
 })
   
-  ReactDOM.render(<Table/>, document.getElementById('table-lines'));
+ReactDOM.render(<Table/>, document.getElementById('table-lines'));

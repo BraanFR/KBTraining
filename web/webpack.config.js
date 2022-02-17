@@ -6,7 +6,7 @@ var CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 module.exports = {
   entry: './component/app.js',
   output: {
-    path: path.join(__dirname, './priv/static' ),
+    path: path.join(__dirname, '../priv/static' ),
     filename: 'bundle.js',
   },
   //This will bundle all our .css file inside styles.css
