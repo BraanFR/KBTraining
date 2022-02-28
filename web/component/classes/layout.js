@@ -3,8 +3,8 @@ var createReactClass = require('create-react-class')
 
 var Layout = createReactClass({
     render(){
-      return <JSXZ in="orders" sel=".main-container">
-          <Z sel=".layout-container">
+      return <JSXZ in="orders" sel=".layout-container">
+          <Z sel=".layout-wrapper">
             <this.props.Child {...this.props}/>
           </Z>
         </JSXZ>

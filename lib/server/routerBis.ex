@@ -1,17 +1,31 @@
 defmodule Server.RouterBis do
   use Plug.Router
+  require Logger
 
   plug Plug.Static, from: "priv/static", at: "/static"
   plug(:match)
   plug Plug.Parsers, parsers: [:urlencoded, {:json, json_decoder: Poison}]
   plug(:dispatch)
 
-  get "/database" do
+  get "/api/order/" do
+    Logger.info("IN GET " <> conn.query_params["id"])
     result = Server.Database.read(Server.Database, conn.query_params["id"])
 
     result = case result do
       {:ok, value} -> value
       :error -> %{}
+    end
+
+    send_resp(conn, 200, Poison.encode!(result))
+  end
+
+  get "/api/orders" do
+    Logger.info("IN GET READ ALL")
+    result = Server.Database.read_all(Server.Database)
+
+    result = case result do
+      [] -> %{}
+      _ -> result
     end
 
     send_resp(conn, 200, Poison.encode!(result))

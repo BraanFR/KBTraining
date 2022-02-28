@@ -17,3 +17,5 @@ Server.Database.search(database, [{"id", "nat_order000147815"}, {"remoteid", "00
 
 
 Server.JsonLoader.load_to_database(Server.Database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
+
+Server.Database.read(Server.Database)

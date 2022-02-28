@@ -14,6 +14,7 @@ module.exports = {
   //   splitChunks: {cacheGroups: {styles: {name: 'styles', test: /\.css$/ , chunks: 'all', enforce: true}}},
   //   minimizer: [`...`, new CssMinimizerPlugin()]
   // },
+  devtool: "inline-source-map",
   plugins: [new MiniCssExtractPlugin({insert: "", filename: "[name].css"})],
   module: {
     rules: [

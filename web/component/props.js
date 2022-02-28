@@ -10,7 +10,8 @@ var remoteProps = {
   orders: (props)=>{
     // if(!props.user)
     //   return
-    var qs = {...props.qs, user_id: props.user.value.id}
+    // var qs = {...props.qs, user_id: props.user.value.id}
+    var qs = {...props.qs}
     var query = Qs.stringify(qs)
     return {
       url: "/api/orders" + (query == '' ? '' : '?' + query),
@@ -19,7 +20,7 @@ var remoteProps = {
   },
   order: (props)=>{
     return {
-      url: "/api/order/" + props.order_id,
+      url: "/api/order/?id=" + props.order_id,
       prop: "order"
     }
   }

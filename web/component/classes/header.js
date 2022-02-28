@@ -3,8 +3,11 @@ var createReactClass = require('create-react-class')
 
 var Header = createReactClass({
     render(){
-      return <JSXZ in="orders" sel=".layout-container">
-          <Z sel=".header-container">
+      return <JSXZ in="orders" sel=".header-container">
+          <Z sel=".page-header">
+            <ChildrenZ/>
+          </Z>
+          <Z sel=".page-container">
             <this.props.Child {...this.props}/>
           </Z>
         </JSXZ>

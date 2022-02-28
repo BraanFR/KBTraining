@@ -16,6 +16,12 @@ defmodule Server.Database do
     GenServer.call(table, {:read, key})
   end
 
+  def read_all(table) do
+    all_elements = elem(GenServer.call(table, {:readall}), 1)
+
+    Enum.reduce(all_elements, [], fn {_key, value}, acc -> [value | acc] end)
+  end
+
   def update(table, key, value) do
     GenServer.cast(table, {:update, key, value})
   end
