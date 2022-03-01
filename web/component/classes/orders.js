@@ -56,7 +56,21 @@ var Orders = createReactClass({
               <Z sel=".customer-name">{order.custom.customer.full_name}</Z>
               <Z sel=".adress1">{this.computeAddress(order.custom.billing_address)}</Z>
               <Z sel=".quantity">{this.computeQuantities(order.custom.items)}</Z>
-              <Z sel=".text-block-3"><a href={"/order/" + order.id}></a></Z>
+              <Z sel=".details"><a href={"/order/" + order.id}></a></Z>
+              <Z sel=".delete">
+                <a href="#"></a>
+                {  
+                  // this.props.modal({
+                  //   type: 'delete',
+                  //   title: 'Order deletion',
+                  //   message: `Are you sure you want to delete this ?`,
+                  //   callback: (value)=>{
+                  //     //Do something with the return value
+                  //     alert(value);
+                  //   }
+                  // })
+                }
+              </Z>
             </JSXZ>))
         }
         </Z>
