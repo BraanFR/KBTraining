@@ -69,13 +69,23 @@ defmodule Server.RouterBis do
   end
 
   delete "/database" do
+    Logger.info("IN DELETE " <> conn.query_params["id"])
     Server.Database.delete(Server.Database, conn.query_params["id"])
 
-    result = Server.Database.read(Server.Database, conn.query_params["id"])
-    case result do
-      {:ok, _value} -> send_resp(conn, 200, "SUCCESSFULY DELETED")
-      :error -> send_resp(conn, 418, "COULD NOT DELETE")
+    # result = Server.Database.read(Server.Database, conn.query_params["id"])
+    # case result do
+    #   {:ok, _value} -> send_resp(conn, 418, Poison.encode!("COULD NOT DELETE"))
+    #   :error -> send_resp(conn, 200, Poison.encode!("SUCCESSFULY DELETED"))
+    # end
+
+    result = Server.Database.read_all(Server.Database)
+
+    result = case result do
+      [] -> %{}
+      _ -> result
     end
+
+    send_resp(conn, 200, Poison.encode!(result))
 
   end
 

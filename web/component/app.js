@@ -40,8 +40,8 @@ require('../css/tuto.webflow.css');
 
 var Qs = require('qs')
 var Cookie = require('cookie')
-var XMLHttpRequest = require("xhr2")
 
+var HTTP = require("./utils.js")
 const routes = require("./routes.js")
 
 const Layout = require("./classes/layout.js")
@@ -54,37 +54,6 @@ const Page = require("./classes/page.js")
 const Table = require("./classes/table.js")
 
 const debug = false;
-
-var HTTP = new (function(){
-  this.get = (url)=> this.req('GET',url)
-  this.delete = (url)=>this.req('DELETE',url)
-  this.post = (url,data)=>this.req('POST',url,data)
-  this.put = (url,data)=>this.req('PUT',url,data)
-
-  this.req = (method,url,data)=> new Promise((resolve, reject) => {
-    var req = new XMLHttpRequest()
-    req.open(method, url)
-    req.responseType = "text"
-    req.setRequestHeader("accept","application/json,*/*;0.8")
-    req.setRequestHeader("content-type","application/json")
-    req.onload = ()=>{
-      if(req.status >= 200 && req.status < 300){
-      resolve(req.responseText && JSON.parse(req.responseText))
-      }else{
-      reject({http_code: req.status})
-      }
-    }
-  req.onerror = (err)=>{
-    if (debug) {
-      console.log(req)
-      console.log(err)
-    }
-    
-    reject({http_code: req.status})
-  }
-  req.send(data && JSON.stringify(data))
-  })
-})()
 
 var browserState = {Child: Child}
 

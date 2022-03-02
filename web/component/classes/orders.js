@@ -1,11 +1,18 @@
+var ReactDOM = require('react-dom')
 var React = require("react")
 var createReactClass = require('create-react-class')
 var remoteProps = require('../props.js')
+
+var HTTP = require("../utils.js")
 
 
 var Orders = createReactClass({
     statics: {
       remoteProps: [remoteProps.orders]
+    },
+
+    getInitialState: function() {
+      return {value: this.props.orders.value};
     },
     
     computeQuantities(items) {
@@ -38,6 +45,28 @@ var Orders = createReactClass({
       return fullAddress;
     },
 
+    onClickMode(id) {
+      this.props.modal({
+        type: 'delete',
+        title: 'Order deletion',
+        message: `Are you sure you want to delete this ?`,
+        callback: (trigger) => {
+          if (trigger){
+            //Do something with the return value
+            console.log("Callback delete modal start");
+
+            HTTP.delete("/database?id=" + id).then((res) => {
+              this.setState({value : res});
+              // ReactDOM.render(<Orders {...this.props}/>, document.getElementById('root'));
+              // return res
+            });
+
+            console.log("Callback delete modal end");
+          }
+        }
+      });
+    },
+
     render(){
       return <JSXZ in="orders" sel=".orders-container">
         <Z sel=".search-orders">
@@ -50,27 +79,14 @@ var Orders = createReactClass({
 
         <Z sel=".table-lines">
         {
-          this.props.orders.value.map(order => (
+          this.state.value.map(order => (
             <JSXZ in="orders" sel=".table-line">
               <Z sel=".command-number">{order.remoteid}</Z>
               <Z sel=".customer-name">{order.custom.customer.full_name}</Z>
               <Z sel=".adress1">{this.computeAddress(order.custom.billing_address)}</Z>
               <Z sel=".quantity">{this.computeQuantities(order.custom.items)}</Z>
               <Z sel=".details"><a href={"/order/" + order.id}></a></Z>
-              <Z sel=".delete">
-                <a href="#"></a>
-                {  
-                  // this.props.modal({
-                  //   type: 'delete',
-                  //   title: 'Order deletion',
-                  //   message: `Are you sure you want to delete this ?`,
-                  //   callback: (value)=>{
-                  //     //Do something with the return value
-                  //     alert(value);
-                  //   }
-                  // })
-                }
-              </Z>
+              <Z sel=".delete" onClick={()=> this.onClickMode(order.id)}><a href="#"></a></Z>
             </JSXZ>))
         }
         </Z>

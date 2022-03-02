@@ -19,13 +19,26 @@ var cn = function(){
 
 var DeleteModal = createReactClass({
   render(){
-    <JSXZ in="confirmation" sel=".confirmation-wrapper">
-      <Z sel=".confirmation-content">
-        <ChildrenZ/>
-      </Z>
-    </JSXZ>
+    return <JSXZ in="confirmation" sel=".confirmation-wrapper">
+          <Z sel=".confirm-btn" onClick={()=> this.props.callback(true)}>
+            <ChildrenZ/>
+          </Z>
+
+          <Z sel=".decline-btn" onClick={()=> this.props.callback(false)}>
+            <ChildrenZ/>
+          </Z>
+            {/* <Z sel=".confirmation-content">
+              <ChildrenZ/>
+
+              <Z sel="."></Z>
+
+
+              <div class="w-col w-col-6"><a href="#" class="confirm-btn w-button">Confirm</a></div>
+                <div class="w-col w-col-6"><a href="#" class="decline-btn w-button">Decline</a></div>
+            </Z> */}
+          </JSXZ>
   }
-})
+});
 
 var Layout = createReactClass({
   statics: {},
@@ -53,10 +66,6 @@ var Layout = createReactClass({
     var props = {
       ...this.props, modal: this.modal
     }
-
-    console.log(modal_component);
-    console.log("----------------");
-    console.log(props);
 
     return <JSXZ in="orders" sel=".layout-container">
         <Z sel=".modal-wrapper2" className={cn(classNameZ, {'hidden': !modal_component})}>
