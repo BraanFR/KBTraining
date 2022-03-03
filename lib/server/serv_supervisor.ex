@@ -11,7 +11,8 @@ defmodule ServSupervisor do
 
     def init(_) do
         children = [
-            {Server.Database, name: Server.Database}
+            {Server.Database, name: Server.Database},
+            {Riak, name: Riak}
         ]
 
         Supervisor.init(children, strategy: :one_for_one)
