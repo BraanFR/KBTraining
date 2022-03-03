@@ -52,16 +52,15 @@ var Orders = createReactClass({
         message: `Are you sure you want to delete this ?`,
         callback: (trigger) => {
           if (trigger){
-            //Do something with the return value
-            console.log("Callback delete modal start");
-
-            HTTP.delete("/database?id=" + id).then((res) => {
-              this.setState({value : res});
-              // ReactDOM.render(<Orders {...this.props}/>, document.getElementById('root'));
-              // return res
-            });
-
-            console.log("Callback delete modal end");
+            this.props.loader(new Promise((success, f) => {
+              HTTP.delete("/database?id=" + id)
+              .then((res) => {
+                this.setState({value : res});
+              })
+              .then(() => {
+                success();
+              })
+            }));
           }
         }
       });

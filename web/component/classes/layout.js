@@ -27,16 +27,17 @@ var DeleteModal = createReactClass({
           <Z sel=".decline-btn" onClick={()=> this.props.callback(false)}>
             <ChildrenZ/>
           </Z>
-            {/* <Z sel=".confirmation-content">
-              <ChildrenZ/>
+    </JSXZ>
+  }
+});
 
-              <Z sel="."></Z>
-
-
-              <div class="w-col w-col-6"><a href="#" class="confirm-btn w-button">Confirm</a></div>
-                <div class="w-col w-col-6"><a href="#" class="decline-btn w-button">Decline</a></div>
-            </Z> */}
-          </JSXZ>
+var LoadingModal = createReactClass({
+  render(){
+    return <JSXZ in="loading" sel=".loader-wrapper">
+      <Z sel=".loader-content">
+        <ChildrenZ/>
+      </Z>
+    </JSXZ>
   }
 });
 
@@ -44,7 +45,10 @@ var Layout = createReactClass({
   statics: {},
 
   getInitialState: function() {
-    return {modal: null};
+    return {
+      modal: null,
+      displayLoader: false
+    };
   },
   
   modal(spec) {
@@ -56,6 +60,16 @@ var Layout = createReactClass({
       }
     }})
   },
+
+  loader(func) {
+    this.setState({displayLoader: true});
+
+    return new Promise((s, f) => {
+      func.then(() => {
+        this.setState({displayLoader: false})
+      })
+    });
+  },
     
   render(){
     var modal_component = {
@@ -64,14 +78,20 @@ var Layout = createReactClass({
     modal_component = modal_component && modal_component(this.state.modal);
 
     var props = {
-      ...this.props, modal: this.modal
+      ...this.props, modal: this.modal, loader: this.loader
     }
+
+    var modal_loader = <LoadingModal/>
 
     return <JSXZ in="orders" sel=".layout-container">
         <Z sel=".modal-wrapper2" className={cn(classNameZ, {'hidden': !modal_component})}>
           {modal_component}
         </Z>
         
+        <Z sel=".loading-wrapper" className={cn(classNameZ, {'hidden': !this.state.displayLoader})}>
+          {modal_loader}
+        </Z>
+
         <Z sel=".layout-wrapper">
           <this.props.Child {...props}/>
         </Z>

@@ -85,6 +85,8 @@ defmodule Server.RouterBis do
       _ -> result
     end
 
+    :timer.sleep(2000)
+
     send_resp(conn, 200, Poison.encode!(result))
 
   end
