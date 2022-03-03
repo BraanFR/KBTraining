@@ -79,7 +79,7 @@ var Orders = createReactClass({
         <Z sel=".table-lines">
         {
           this.state.value.map(order => (
-            <JSXZ in="orders" sel=".table-line">
+            <JSXZ in="orders" sel=".table-line" key={order.id}>
               <Z sel=".command-number">{order.remoteid}</Z>
               <Z sel=".customer-name">{order.custom.customer.full_name}</Z>
               <Z sel=".adress1">{this.computeAddress(order.custom.billing_address)}</Z>
