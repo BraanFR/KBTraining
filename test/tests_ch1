@@ -18,7 +18,7 @@ Server.Database.search(database, [{"id", "nat_order000147815"}, {"remoteid", "00
 
 Server.JsonLoader.load_to_database(Server.Database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
 
-Server.Database.read(Server.Database)
+Server.Database.read(Server.Database, "nat_order000147815")
 
 
 
@@ -27,3 +27,10 @@ Riak.list_keys()
 Riak.get('test')
 Riak.delete('test')
 Riak.list_keys()
+
+Riak.upload_schema()
+iak.get_schema('vlu_orders_schema')
+
+Riak.create_index()
+Riak.list_indexes()
+Riak.empty_bucket()
