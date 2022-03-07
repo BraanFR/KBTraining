@@ -52,7 +52,7 @@ defmodule Riak do
     # Logger.info(body)
 
     if code in [200, 300] do
-      {:ok, {code, body}}
+      {:ok, {code, Poison.decode!(body)}}
     else
       {:ko, {code, body}}
     end
@@ -146,7 +146,8 @@ defmodule Riak do
   def empty_bucket() do
     keys = Poison.decode!(elem(Riak.list_keys(), 1))["keys"]
 
-    Enum.each(keys, fn x -> Riak.delete(x) end)
+    task = Task.async_stream(keys, fn item -> Riak.delete(item) end, max_concurrency: 5)
+    Stream.run(task)
 
     {:ok}
   end

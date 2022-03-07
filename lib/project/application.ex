@@ -21,7 +21,8 @@ defmodule Project.Application do
     # Supervisor.start_link(children, opts)
 
     ServSupervisor.start_link([])
-    Server.JsonLoader.load_to_database(Server.Database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
+    # Server.JsonLoader.load_to_database(Server.Database, "/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
+    Server.JsonLoader.load_to_database_riak("/home/vincent/Documents/Projects/KBRW/training/2021_12_30_formation/Formation/Resources/chap1/orders_dump/orders_chunk0.json")
     Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
