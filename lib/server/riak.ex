@@ -4,6 +4,7 @@ defmodule Riak do
   def url, do: "https://kbrw-sb-tutoex-riak-gateway.kbrw.fr"
   def bucket, do: "vlu_orders"
   def schema_path, do: "/home/vincent/Documents/Projects/KBRW/training/kbrw_training/project/schemas/vlu_schema.xml"
+  def index, do: "vlu_orders_index"
 
 
   def auth_header do
@@ -156,4 +157,64 @@ defmodule Riak do
   def delete_bucket(_bucket) do
     {:ko}
   end
+
+
+  def delete_bucket_props() do
+    {:ok, {{_, code, _message}, _headers, body}} = :httpc.request(:delete, {'#{Riak.url}/buckets/#{Riak.bucket}/props', Riak.auth_header()}, [], [])
+
+    if code == 204 do
+      {:ok, {code, body}}
+    else
+      {:ko, {code, body}}
+    end
+  end
+
+
+  def delete_index() do
+    {:ok, {{_, code, _message}, _headers, body}} = :httpc.request(:delete, {'#{Riak.url}/search/index/#{Riak.index}', Riak.auth_header()}, [], [])
+
+    if code == 204 do
+      {:ok, {code, body}}
+    else
+      {:ko, {code, body}}
+    end
+  end
+
+
+  def search(index, query, page \\ 0, rows \\ 30, sort \\ "creation_date_index") do
+    # {:ok, {{_, code, _message}, _headers, body}} = :httpc.request(:get, {'#{Riak.url}/search/query/#{Riak.index}/?wt=json&q=type:nat_order', Riak.auth_header()}, [], [])
+
+    # query = Riak.escape(query)
+
+    {:ok, {{_, code, _message}, _headers, body}} = :httpc.request(:get, {'#{Riak.url}/search/query/#{index}/?wt=json&q=#{query}&start=#{page}&rows=#{rows}&sort=#{sort}%20DESC', Riak.auth_header()}, [], [])
+
+    {:ok, Poison.decode!(body)["response"]}
+  end
+
+
+  def escape(string) do
+    string = String.replace(string, "+", "\\+")
+    string = String.replace(string, "-", "\\-")
+    string = String.replace(string, "&&", "\\&\\&")
+    string = String.replace(string, "||", "\\|\\|")
+    string = String.replace(string, "!", "\\!")
+    string = String.replace(string, "(", "\\(")
+    string = String.replace(string, ")", "\\)")
+    string = String.replace(string, "{", "\\{")
+    string = String.replace(string, "}", "\\}")
+    string = String.replace(string, "[", "\\[")
+    string = String.replace(string, "]", "\\]")
+    string = String.replace(string, "^", "\\^")
+    string = String.replace(string, "\"", "\\\"")
+    string = String.replace(string, "~", "\\~")
+    string = String.replace(string, "*", "\\*")
+    string = String.replace(string, "?", "\\?")
+    string = String.replace(string, ":", "\\:")
+    string = String.replace(string, "/", "\\/")
+
+    string = String.replace(string, "\\", "%5C")
+
+    string
+  end
+
 end

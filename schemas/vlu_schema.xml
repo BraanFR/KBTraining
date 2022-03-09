@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema name="default" version="1.5">
     <fields>
-        <field name="remoteid"                      type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="id"                            type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="custom_shipping_address_city"  type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="custom_customer_full_name"     type="string" indexed="true" stored="true" multiValued="false"/>
-        <field name="type"                          type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="id"                             type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="remoteid"                       type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="type"                           type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="creation_date_index"            type="date"   indexed="true" stored="true" multiValued="false"/>
+        <field name="custom.shipping_address.city"   type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="custom.customer.full_name"      type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="custom.items.quantity_to_fetch" type="int"    indexed="true" stored="true" multiValued="true" />
         
         <dynamicField name="*" type="ignored" />
         

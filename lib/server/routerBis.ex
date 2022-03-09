@@ -9,11 +9,18 @@ defmodule Server.RouterBis do
 
   get "/api/order/" do
     Logger.info("IN GET " <> conn.query_params["id"])
-    result = Server.Database.read(Server.Database, conn.query_params["id"])
+    # result = Server.Database.read(Server.Database, conn.query_params["id"])
+
+    result = Riak.get(conn.query_params["id"])
+
+    # result = case result do
+    #   {:ok, value} -> value
+    #   :error -> %{}
+    # end
 
     result = case result do
-      {:ok, value} -> value
-      :error -> %{}
+      {:ok, value} -> elem(value, 1)
+      {:ko, _value} -> %{}
     end
 
     send_resp(conn, 200, Poison.encode!(result))
@@ -21,7 +28,29 @@ defmodule Server.RouterBis do
 
   get "/api/orders" do
     Logger.info("IN GET READ ALL")
-    result = Server.Database.read_all(Server.Database)
+    # result = Server.Database.read_all(Server.Database)
+
+    page = conn.query_params["page"]
+    rows = conn.query_params["rows"]
+    sort = conn.query_params["sort"]
+
+    query = Enum.reduce(Map.keys(conn.query_params), "", fn x, acc ->
+      if x not in ["page", "rows", "sort"] do
+        acc <> "&" <> x <> ":" <> conn.query_params[x]
+      else
+        acc
+      end
+    end)
+
+    query = if String.length(query) > 0 do
+      String.slice(query, 1, String.length(query) - 1)
+    else
+      "*:*"
+    end
+
+    Logger.info(query)
+
+    result = elem(Riak.search(Riak.index, query, page || 0, rows || 30, sort || "creation_date_index"), 1)["docs"]
 
     result = case result do
       [] -> %{}
@@ -31,16 +60,16 @@ defmodule Server.RouterBis do
     send_resp(conn, 200, Poison.encode!(result))
   end
 
-  get "/database/search" do
-    result = Server.Database.search(Server.Database, [{conn.query_params["id"], conn.query_params["value"]}])
+  # get "/database/search" do
+  #   result = Server.Database.search(Server.Database, [{conn.query_params["id"], conn.query_params["value"]}])
 
-    result = case result do
-      [] -> %{}
-      _ -> result
-    end
+  #   result = case result do
+  #     [] -> %{}
+  #     _ -> result
+  #   end
 
-    send_resp(conn, 200, Poison.encode!(result))
-  end
+  #   send_resp(conn, 200, Poison.encode!(result))
+  # end
 
   put "/database" do
     Server.Database.update(Server.Database, conn.body_params["id"], conn.body_params["value"])
