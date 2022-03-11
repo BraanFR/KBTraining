@@ -34,3 +34,9 @@ iak.get_schema('vlu_orders_schema')
 Riak.create_index()
 Riak.list_indexes()
 Riak.empty_bucket()
+
+
+GenServer.start_link(HelloPort, {"node hello.js", 0, cd: "/home/vincent/Documents/Projects/KBRW/training/kbrw_training/project/port/hello_port/lib"}, name: Hello)
+HelloPort.call(:hello)
+HelloPort.cast({:kbrw, 42})
+HelloPort.call(:kbrw)
