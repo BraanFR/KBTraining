@@ -26,6 +26,8 @@
     "babel-loader": "^8.2.3",
     "create-react-class": "^15.7.0",
     "jsx": "^0.9.89",
+    "null-loader": "^4.0.1",
+    "reaxt": "file:reaxt.tgz",
     "webpack-cli": "^4.9.2"
   }
 }

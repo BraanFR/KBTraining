@@ -7,6 +7,7 @@ defmodule Project.MixProject do
       version: "0.1.0",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
+      compilers: [:reaxt_webpack] ++ Mix.compilers,
       deps: deps()
     ]
   end
@@ -22,8 +23,9 @@ defmodule Project.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison, "~> 5.0"},
-      {:plug_cowboy, "~> 2.4"}
+      {:poison, "~> 4.0"},
+      {:plug_cowboy, "~> 2.4"},
+      {:reaxt, tag: "v4.0.2", github: "kbrw/reaxt"},
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

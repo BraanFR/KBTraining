@@ -3,6 +3,7 @@
     "@kbrw/babel-preset-jsxz": "~1.0.2"
   },
   "dependencies": {
+    "@kbrw/node_erlastic": "^0.1.2",
     "qs": "~6.9.4"
   }
 }
