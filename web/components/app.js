@@ -1,33 +1,4 @@
 
-// const { displayAlert } = require('../script')
-
-// require('!!file-loader?name=[name].[ext]!../index.html')
-// // require('../css/tuto.webflow.css');
-
-// const btn = <button onClick={ () => displayAlert() }>Click Me</button>
-// ReactDOM.render(
-//     btn,
-//     document.getElementById('root')
-// );
-
-
-
-// var createReactClass = require('create-react-class')
-
-// var Page = createReactClass({
-//   render(){
-//     return <JSXZ in="template" sel=".container">
-//       <Z sel=".item">Burgers</Z>,
-//       <Z sel=".price">50</Z>
-//     </JSXZ>
-//   }
-// })
-
-// ReactDOM.render(
-//   <Page/>,
-//   document.getElementById('burger')
-// )
-
 require('!!file-loader?name=[name].[ext]!../index.html')
 /* required library for our React app */
 var ReactDOM = require('react-dom')
@@ -52,83 +23,43 @@ const ErrorPage = require("./classes/error.js")
 const Child = require("./classes/child.js")
 const Page = require("./classes/page.js")
 const Table = require("./classes/table.js")
+const Link = require("./classes/link.js")
 
 const debug = false;
 
-var browserState = {Child: Child}
+var browserState = {}
 
-// ReactDOM.render(<Page/>, document.getElementById('root'));
-  
-// ReactDOM.render(<Table/>, document.getElementById('table-lines'));
-
-
-function onPathChange() {
-  if (debug){
-    console.log("ON PATH CHANGE START")
+function inferPropsChange(path,query,cookies){ // the second part of the onPathChange function have been moved here
+  browserState = {
+    ...browserState,
+    path: path, qs: query,
+    Link: Link,
+    Child: Child
   }
 
-  var path = location.pathname;
-  var qs = Qs.parse(location.search.slice(1));
-  var cookies = Cookie.parse(document.cookie);
-
-  var route;
-  
-  // We try to match the requested path to one our our routes
-  for (var key in routes) {
-    routeProps = routes[key].match(path, qs)
-    if (routeProps){
-      if (debug) {
-        console.log("ROUTE MATCH");
-        console.log(routeProps)
-      }
+  var route, routeProps
+  for(var key in routes) {
+    routeProps = routes[key].match(path, query)
+    if(routeProps){
       route = key
-        break;
+      break
     }
   }
 
-  // We add the route name and the route Props to the global browserState
+  if(!route){
+    return new Promise( (res,reject) => reject({http_code: 404}))
+  }
   browserState = {
     ...browserState,
     ...routeProps,
     route: route
   }
 
-  if(debug){
-    console.log(browserState)
-  }
-
-  // If the path in the URL doesn't match with any of our routes, we render an Error component (we will have to create it later)
-  if(!route)
-    return ReactDOM.render(<ErrorPage message={"Not Found"} code={404}/>, document.getElementById('root'))
-
-  // If we found a match, we render the Child component, which will render the handlerPath components recursively, remember ? ;)
-  // ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
-
-  addRemoteProps(browserState).then(
-    (props) => {
-      if(debug) {
-        console.log("RENDER CHILD")
-      }
+  return addRemoteProps(browserState).then(
+    (props)=>{
       browserState = props
-      // Log our new browserState
-      console.log(browserState)
-      // Render our components using our remote data
-      ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
-    }, (res) => {
-      if(debug) {
-        console.log("ERROR")
-        console.log(res.http_code)
-      }
-      ReactDOM.render(<ErrorPage message={"Shit happened"} code={res.http_code}/>, document.getElementById('root'))
     })
-
-    if(debug) {
-      console.log("ON PATH CHANGE END")
-    }
 }
-
-window.addEventListener("popstate", ()=>{ onPathChange() })
-onPathChange() // We also call onPathChange once when the js is loaded
 
 
 function addRemoteProps(props){
@@ -209,10 +140,19 @@ function addRemoteProps(props){
   })
 }
 
-var GoTo = (route, params, query) => {
-  var qs = Qs.stringify(query)
-  var url = routes[route].path(params) + ((qs=='') ? '' : ('?'+qs))
-  history.pushState({}, "", url)
-  onPathChange()
+export default {
+  reaxt_server_render(params, render){
+    inferPropsChange(params.path, params.query, params.cookies)
+      .then(()=>{
+        render(<Child {...browserState}/>)
+      },(err)=>{
+        render(<ErrorPage message={"Not Found :" + err.url } code={err.http_code}/>, err.http_code)
+      })
+  },
+  reaxt_client_render(initialProps, render){
+    browserState = initialProps
+    Link.renderFunc = render
+    window.addEventListener("popstate", ()=>{ Link.onPathChange() })
+    Link.onPathChange()
+  }
 }
-// export and reuse in pages

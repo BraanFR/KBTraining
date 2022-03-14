@@ -15,6 +15,14 @@ defmodule Project.Application do
       {Plug.Cowboy, scheme: :http, plug: Server.RouterBis, options: [port: 4001]}
     ]
 
+    Application.put_env(
+      :reaxt, :global_config,
+      Map.merge(
+        Application.get_env(:reaxt, :global_config), %{localhost: "http://localhost:4001"}
+      )
+    )
+    Reaxt.reload
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     # opts = [strategy: :one_for_one, name: Project.Supervisor]

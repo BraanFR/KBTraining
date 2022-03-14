@@ -1,11 +1,15 @@
 defmodule Server.RouterBis do
   use Plug.Router
   require Logger
+  require EEx
 
-  plug Plug.Static, from: "priv/static", at: "/static"
+  # plug Plug.Static, from: "priv/static", at: "/static"
+  plug Plug.Static, at: "/public", from: :project
   plug(:match)
   plug Plug.Parsers, parsers: [:urlencoded, {:json, json_decoder: Poison}]
   plug(:dispatch)
+
+  EEx.function_from_file :defp, :layout, "web/layout.html.eex", [:render]
 
   get "/api/order/" do
     Logger.info("IN GET " <> conn.query_params["id"])
@@ -122,8 +126,14 @@ defmodule Server.RouterBis do
 
   # get "/", do: send_resp(conn, 200, "Welcome")
 
-  get _, do: send_file(conn, 200, "priv/static/index.html")
+  # get _, do: send_file(conn, 200, "priv/static/index.html")
 
   # match _, do: send_resp(conn, 404, "Page Not Found")
+
+  get _ do
+    conn = fetch_query_params(conn)
+    render = Reaxt.render!(:app, %{path: conn.request_path, cookies: conn.cookies, query: conn.params},30_000)
+    send_resp(put_resp_header(conn, "content-type", "text/html;charset=utf-8"), render.param || 200, layout(render))
+  end
 
 end
