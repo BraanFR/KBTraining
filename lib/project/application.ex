@@ -12,7 +12,8 @@ defmodule Project.Application do
       # {Project.Worker, arg}
 
       # {Plug.Cowboy, scheme: :http, plug: Server.TheFirstPlug, options: [port: 4001]}
-      {Plug.Cowboy, scheme: :http, plug: Server.RouterBis, options: [port: 4001]}
+      {Plug.Cowboy, scheme: :http, plug: Server.RouterBis, options: [port: 4001]},
+      {Plug.Cowboy, scheme: :http, plug: Server.EwebRouter, options: [port: 4002]}
     ]
 
     Application.put_env(

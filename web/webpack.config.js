@@ -45,10 +45,10 @@ var CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 var client_config = {
   //This will bundle all our .css file inside styles.css
-  optimization: {
-    splitChunks: {cacheGroups: {styles: {name: 'styles', test: /\.css$/ , chunks: 'all', enforce: true}}},
-    minimizer: [`...`, new CssMinimizerPlugin()]
-  },
+  // optimization: {
+  //   splitChunks: {cacheGroups: {styles: {name: 'styles', test: /\.css$/ , chunks: 'all', enforce: true}}},
+  //   minimizer: [`...`, new CssMinimizerPlugin()]
+  // },
   devtool: "source-map",
   plugins: [new MiniCssExtractPlugin({insert: "", filename: "[name].css"})],
   entry: "reaxt/client_entry_addition",
