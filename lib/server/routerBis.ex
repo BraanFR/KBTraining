@@ -75,6 +75,27 @@ defmodule Server.RouterBis do
   #   send_resp(conn, 200, Poison.encode!(result))
   # end
 
+  get "/pay" do
+    Logger.info("IN GET " <> conn.query_params["id"])
+    # result = Server.Database.read(Server.Database, conn.query_params["id"])
+
+    pid = Server.DynSupervisor.get_child(conn.query_params["id"])
+
+    result = TransitionGenServ.pay(pid)
+
+    # result = case result do
+    #   {:ok, value} -> value
+    #   :error -> %{}
+    # end
+
+    result = case result do
+      :action_unavailable -> %{}
+      _ -> result
+    end
+
+    send_resp(conn, 200, Poison.encode!(result))
+  end
+
   put "/database" do
     Server.Database.update(Server.Database, conn.body_params["id"], conn.body_params["value"])
 

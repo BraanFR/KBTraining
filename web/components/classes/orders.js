@@ -136,6 +136,7 @@ var Orders = createReactClass({
               <Z sel=".quantity">{this.computeQuantitiesRiak(order["custom.items.quantity_to_fetch"])}</Z>
               <Z sel=".details"><a href={"/order/" + order.id}></a></Z>
               <Z sel=".delete" onClick={()=> this.onClickMode(order.id)}><a href="#"></a></Z>
+              <Z sel=".pay-status">Status: {order["status.state"]}</Z>
             </JSXZ>))
         }
         </Z>

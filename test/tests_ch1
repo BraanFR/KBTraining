@@ -40,3 +40,18 @@ GenServer.start_link(HelloPort, {"node hello.js", 0, cd: "/home/vincent/Document
 HelloPort.call(:hello)
 HelloPort.cast({:kbrw, 42})
 HelloPort.call(:kbrw)
+
+
+
+GenServer.start_link(TransitionGenServ, "nat_order000147674")
+pid = elem(GenServer.start_link(TransitionGenServ, "nat_order000147674"), 1)
+TransitionGenServ.call(pid)
+TransitionGenServ.pay(pid)
+TransitionGenServ.verify(pid)
+
+
+Riak.initialize_commands
+Server.DynSupervisor.start_child("nat_order000147706")
+Server.DynSupervisor.start_child("nat_order000147797")
+
+"nat_order000147706"

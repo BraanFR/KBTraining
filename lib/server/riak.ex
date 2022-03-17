@@ -186,7 +186,7 @@ defmodule Riak do
 
     # query = Riak.escape(query)
 
-    {:ok, {{_, code, _message}, _headers, body}} = :httpc.request(:get, {'#{Riak.url}/search/query/#{index}/?wt=json&q=#{query}&start=#{page}&rows=#{rows}&sort=#{sort}%20DESC', Riak.auth_header()}, [], [])
+    {:ok, {{_, _code, _message}, _headers, body}} = :httpc.request(:get, {'#{Riak.url}/search/query/#{index}/?wt=json&q=#{query}&start=#{page}&rows=#{rows}&sort=#{sort}%20DESC', Riak.auth_header()}, [], [])
 
     {:ok, Poison.decode!(body)["response"]}
   end
@@ -215,6 +215,25 @@ defmodule Riak do
     string = String.replace(string, "\\", "%5C")
 
     string
+  end
+
+
+  def initialize_commands() do
+    keys = Poison.decode!(elem(Riak.list_keys(), 1))["keys"]
+
+    task = Task.async_stream(keys,
+      fn item ->
+        order = elem(elem(Riak.get(item), 1), 1)
+        orderStatus = Map.put(order["status"], "state", "init")
+        order = Map.put(order, "status" , orderStatus)
+
+        Riak.put(item, Poison.encode!(order))
+
+        # Logger.debug(order)
+      end,
+      max_concurrency: 5)
+
+    Stream.run(task)
   end
 
 end

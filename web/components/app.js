@@ -140,7 +140,7 @@ function addRemoteProps(props){
   })
 }
 
-export default {
+module.exports = {
   reaxt_server_render(params, render){
     inferPropsChange(params.path, params.query, params.cookies)
       .then(()=>{

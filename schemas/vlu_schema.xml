@@ -4,6 +4,7 @@
         <field name="id"                             type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="remoteid"                       type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="type"                           type="string" indexed="true" stored="true" multiValued="false"/>
+        <field name="status.state"                   type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="creation_date_index"            type="date"   indexed="true" stored="true" multiValued="false"/>
         <field name="custom.shipping_address.city"   type="string" indexed="true" stored="true" multiValued="false"/>
         <field name="custom.customer.full_name"      type="string" indexed="true" stored="true" multiValued="false"/>
